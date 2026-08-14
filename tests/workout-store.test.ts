@@ -23,6 +23,14 @@ describe("workout domain", () => {
     expect(next.plans.find((plan) => plan.date === date)?.exerciseIds).toContain(exerciseId);
   });
 
+  it("inclui um novo exercício personalizado na biblioteca", () => {
+    const state = initialWorkoutState();
+    const custom = { id: "exercise-custom-1", name: "Remada baixa", description: "Puxada horizontal", category: "Costas", sets: 3, reps: 12, restSeconds: 60, notes: "Controle na volta", isCustom: true };
+    const next = workoutReducer(state, { type: "add-exercise", exercise: custom });
+    expect(next.exercises).toContainEqual(custom);
+    expect(next.exercises).toHaveLength(state.exercises.length + 1);
+  });
+
   it("calcula progresso por séries depois de iniciar e concluir uma série", () => {
     const state = initialWorkoutState();
     const date = state.plans.find((plan) => plan.exerciseIds.length > 0)!.date;

@@ -15,3 +15,6 @@
 - [x] Investigar por que o APK Android instalado carrega o template inicial em vez da aplicação FitTrack customizada
 - [x] Corrigir a entrada de navegação e/ou configuração de bundle para o build Android (checkpoint atualizado com o código customizado)
 - [x] Validar o bundle de produção Android com `expo export` após a correção
+
+- [x] Corrigir o fluxo de inclusão de um novo exercício no menu Exercícios sem alterar os demais fluxos
+- [x] Validar que o novo exercício é salvo e aparece na biblioteca após fechar e reabrir a tela (store persistente e teste de regressão aprovados)
