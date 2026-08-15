@@ -27,3 +27,8 @@
 - [x] Rastrear e corrigir a origem do bundle usado na compilação Android (versão Expo 1.0.1 e versionCode Android 2)
 - [x] Validar um bundle Android limpo e documentar a instalação correta (export Android concluído)
 - [ ] Confirmar no dispositivo físico que o APK gerado a partir do novo checkpoint mostra a versão 1.0.1
+
+- [x] Comparar o bundle do checkpoint atual com o artefato usado no APK 1.0.4
+- [x] Forçar a publicação do bundle atualizado, evitando cache ou checkpoint anterior (comando `build` agora exporta Android antes do servidor)
+- [x] Validar o bundle Android limpo e os dois elementos do cadastro de exercícios no artefato exportado
+- [ ] Confirmar no dispositivo físico que o APK publicado contém o bundle atualizado
