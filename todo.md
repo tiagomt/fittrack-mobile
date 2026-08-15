@@ -32,3 +32,7 @@
 - [x] Forçar a publicação do bundle atualizado, evitando cache ou checkpoint anterior (comando `build` agora exporta Android antes do servidor)
 - [x] Validar o bundle Android limpo e os dois elementos do cadastro de exercícios no artefato exportado
 - [ ] Confirmar no dispositivo físico que o APK publicado contém o bundle atualizado
+
+- [x] Refatorar o botão “Novo exercício” com contraste explícito e independente do tema
+- [x] Refatorar o botão “Adicionar exercício” como ação nativa visível fora da área rolável
+- [x] Validar o fluxo refatorado no bundle Android exportado e preservar as demais telas (testes, TypeScript, lint e expo export aprovados)

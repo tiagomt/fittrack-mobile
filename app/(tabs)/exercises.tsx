@@ -41,7 +41,7 @@ export default function ExercisesScreen() {
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
       <View style={styles.headerRow}><View><Text style={[styles.eyebrow, { color: colors.primary }]}>BIBLIOTECA</Text><Text style={[typography.title, { color: colors.foreground }]}>Exercícios.</Text></View><Pressable onPress={openCreate} style={({ pressed }) => [styles.addButton, { backgroundColor: colors.primary, opacity: pressed ? 0.75 : 1 }]}><IconSymbol name="plus" size={22} color="#ffffff" /></Pressable></View>
       <Text style={[styles.intro, { color: colors.muted }]}>Cadastre uma vez. Reutilize em todos os seus treinos.</Text>
-      <PrimaryButton icon="plus" onPress={openCreate} textColor={colors.background} style={[styles.createButton, { backgroundColor: colors.foreground, borderColor: colors.foreground }]}>Novo exercício</PrimaryButton>
+      <Pressable onPress={openCreate} style={({ pressed }) => [styles.explicitCreateButton, { backgroundColor: colors.foreground, opacity: pressed ? 0.8 : 1 }]}><IconSymbol name="plus" size={18} color={colors.background} /><Text style={[styles.explicitCreateButtonText, { color: colors.background }]}>Novo exercício</Text></Pressable>
       <View style={[styles.searchBox, { backgroundColor: colors.surface, borderColor: colors.border }]}><IconSymbol name={"magnifyingglass" as any} size={19} color={colors.muted} /><TextInput value={query} onChangeText={setQuery} placeholder="Buscar exercício ou grupo muscular" placeholderTextColor={colors.muted} style={[styles.searchInput, { color: colors.foreground }]} /></View>
       <SectionHeader title={`${filtered.length} exercícios`} />
       {filtered.length ? <FlatList scrollEnabled={false} data={filtered} keyExtractor={(item) => item.id} renderItem={({ item }) => <Surface style={styles.exerciseCard}><View style={styles.exerciseTop}><View style={[styles.exerciseIcon, { backgroundColor: `${colors.primary}16` }]}><IconSymbol name="figure.strengthtraining.traditional" size={21} color={colors.primary} /></View><View style={styles.exerciseCopy}><Text style={[styles.exerciseName, { color: colors.foreground }]}>{item.name}</Text><Text style={[styles.exerciseCategory, { color: colors.primary }]}>{item.category}</Text></View><Pressable onPress={() => openEdit(item)} style={styles.actionIcon}><IconSymbol name="pencil" size={18} color={colors.muted} /></Pressable><Pressable onPress={() => Alert.alert("Excluir exercício?", "Ele será removido também dos planejamentos futuros.", [{ text: "Cancelar", style: "cancel" }, { text: "Excluir", style: "destructive", onPress: () => deleteExercise(item.id) }])} style={styles.actionIcon}><IconSymbol name="trash" size={18} color={colors.error} /></Pressable></View><Text style={[styles.exerciseDescription, { color: colors.muted }]}>{item.description || "Sem descrição adicionada."}</Text><View style={styles.exerciseStats}><View><Text style={[styles.statValue, { color: colors.foreground }]}>{item.sets} × {item.reps}</Text><Text style={[styles.statLabel, { color: colors.muted }]}>{item.durationSeconds ? `${item.durationSeconds}s por série` : "séries × reps"}</Text></View><View><Text style={[styles.statValue, { color: colors.foreground }]}>{item.restSeconds}s</Text><Text style={[styles.statLabel, { color: colors.muted }]}>descanso</Text></View><Text style={[styles.exerciseNotes, { color: colors.muted }]} numberOfLines={2}>{item.notes || "Sem observações"}</Text></View></Surface>} /> : <EmptyState icon="figure.strengthtraining.traditional" title="Nenhum exercício encontrado" description="Crie um exercício personalizado ou ajuste a busca." />}
@@ -49,7 +49,39 @@ export default function ExercisesScreen() {
       {showTemplates ? <View style={styles.templatesList}>{templates.map((template) => <Surface key={template.id} style={styles.templateCard}><View style={[styles.templateIcon, { backgroundColor: `${colors.warning}18` }]}><IconSymbol name="trophy.fill" size={20} color={colors.warning} /></View><View style={styles.templateCopy}><Text style={[styles.templateName, { color: colors.foreground }]}>{template.name}</Text><Text style={[styles.templateDescription, { color: colors.muted }]}>{template.description}</Text><Text style={[styles.templateExercises, { color: colors.muted }]}>{template.ids.map((id) => state.exercises.find((exercise) => exercise.id === id)?.name).filter(Boolean).join("  •  ")}</Text></View><Pressable onPress={() => applyTemplate(template.ids)} style={({ pressed }) => [styles.templateButton, { borderColor: colors.primary, opacity: pressed ? 0.65 : 1 }]}><Text style={[styles.templateButtonText, { color: colors.primary }]}>Usar</Text></Pressable></Surface>)}</View> : null}
     </ScrollView>
 
-    <Modal visible={modalVisible} transparent animationType="slide" onRequestClose={() => setModalVisible(false)}><KeyboardAvoidingView style={styles.modalBackdrop} behavior={Platform.OS === "ios" ? "padding" : undefined}><View style={[styles.modalCard, { backgroundColor: colors.background, paddingBottom: Math.max(insets.bottom + 12, 20) }]}><View style={styles.modalHeader}><View><Text style={[styles.modalTitle, { color: colors.foreground }]}>{editing ? "Editar exercício" : "Novo exercício"}</Text><Text style={[styles.modalSubtitle, { color: colors.muted }]}>Detalhes usados nos treinos</Text></View><Pressable onPress={() => setModalVisible(false)}><IconSymbol name="xmark" size={22} color={colors.muted} /></Pressable></View><ScrollView style={styles.formScroll} showsVerticalScrollIndicator={false} contentContainerStyle={styles.formContent} keyboardShouldPersistTaps="handled"><FormField label="Nome" value={form.name} onChangeText={(value) => updateField("name", value)} placeholder="Ex: Pull Up" colors={colors} /><FormField label="Grupo muscular" value={form.category} onChangeText={(value) => updateField("category", value)} placeholder="Ex: Costas" colors={colors} /><View style={styles.formRow}><FormField label="Séries" value={String(form.sets)} onChangeText={(value) => updateField("sets", Number(value.replace(/\D/g, "")) || 0)} keyboardType="number-pad" placeholder="4" colors={colors} /><FormField label="Repetições" value={String(form.reps)} onChangeText={(value) => updateField("reps", Number(value.replace(/\D/g, "")) || 0)} keyboardType="number-pad" placeholder="8" colors={colors} /><FormField label="Descanso (s)" value={String(form.restSeconds)} onChangeText={(value) => updateField("restSeconds", Number(value.replace(/\D/g, "")) || 0)} keyboardType="number-pad" placeholder="90" colors={colors} /></View><FormField label="Descrição" value={form.description} onChangeText={(value) => updateField("description", value)} placeholder="Como executar o exercício" colors={colors} multiline /><FormField label="Observações" value={form.notes} onChangeText={(value) => updateField("notes", value)} placeholder="Dicas, pegada ou adaptações" colors={colors} multiline /></ScrollView><View style={styles.modalFooter}><PrimaryButton onPress={save} textColor={colors.background} style={[styles.saveButton, { backgroundColor: colors.foreground, borderColor: colors.foreground }]}>{editing ? "Salvar alterações" : "Adicionar exercício"}</PrimaryButton></View></View></KeyboardAvoidingView></Modal>
+    <Modal visible={modalVisible} transparent animationType="slide" onRequestClose={() => setModalVisible(false)}>
+      <KeyboardAvoidingView style={styles.modalBackdrop} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+        <View style={[styles.modalCard, { backgroundColor: colors.background }]}>
+          <View style={styles.modalHeader}>
+            <View>
+              <Text style={[styles.modalTitle, { color: colors.foreground }]}>{editing ? "Editar exercício" : "Novo exercício"}</Text>
+              <Text style={[styles.modalSubtitle, { color: colors.muted }]}>Detalhes usados nos treinos</Text>
+            </View>
+            <Pressable onPress={() => setModalVisible(false)} style={styles.closePressable}>
+              <IconSymbol name="xmark" size={22} color={colors.muted} />
+            </Pressable>
+          </View>
+
+          <ScrollView style={styles.formScroll} showsVerticalScrollIndicator={false} contentContainerStyle={styles.formContent} keyboardShouldPersistTaps="handled">
+            <FormField label="Nome" value={form.name} onChangeText={(value) => updateField("name", value)} placeholder="Ex: Pull Up" colors={colors} />
+            <FormField label="Grupo muscular" value={form.category} onChangeText={(value) => updateField("category", value)} placeholder="Ex: Costas" colors={colors} />
+            <View style={styles.formRow}>
+              <FormField label="Séries" value={String(form.sets)} onChangeText={(value) => updateField("sets", Number(value.replace(/\D/g, "")) || 0)} keyboardType="number-pad" placeholder="4" colors={colors} />
+              <FormField label="Repetições" value={String(form.reps)} onChangeText={(value) => updateField("reps", Number(value.replace(/\D/g, "")) || 0)} keyboardType="number-pad" placeholder="8" colors={colors} />
+              <FormField label="Descanso (s)" value={String(form.restSeconds)} onChangeText={(value) => updateField("restSeconds", Number(value.replace(/\D/g, "")) || 0)} keyboardType="number-pad" placeholder="90" colors={colors} />
+            </View>
+            <FormField label="Descrição" value={form.description} onChangeText={(value) => updateField("description", value)} placeholder="Como executar o exercício" colors={colors} multiline />
+            <FormField label="Observações" value={form.notes} onChangeText={(value) => updateField("notes", value)} placeholder="Dicas, pegada ou adaptações" colors={colors} multiline />
+          </ScrollView>
+
+          <View style={[styles.modalFooter, { borderTopColor: colors.border, backgroundColor: colors.background, paddingBottom: Math.max(insets.bottom + 8, 16) }]}>
+            <Pressable onPress={save} style={({ pressed }) => [styles.explicitSaveButton, { backgroundColor: colors.foreground, opacity: pressed ? 0.8 : 1 }]}>
+              <Text style={[styles.explicitSaveButtonText, { color: colors.background }]}>{editing ? "Salvar alterações" : "Adicionar exercício"}</Text>
+            </Pressable>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+    </Modal>
   </ScreenContainer>;
 }
 
@@ -90,13 +122,16 @@ const styles = StyleSheet.create({
   modalBackdrop: { flex: 1, backgroundColor: "rgba(15,23,42,0.45)", justifyContent: "flex-end" },
   modalCard: { height: "90%", maxHeight: "90%", borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 20, gap: 15 },
   modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
+  closePressable: { padding: 4 },
   modalTitle: { fontSize: 22, fontWeight: "900" },
   modalSubtitle: { fontSize: 13, marginTop: 4 },
   formScroll: { flex: 1, minHeight: 0 },
   formContent: { gap: 13, paddingBottom: 16 },
   modalFooter: { paddingTop: 10 },
-  createButton: { minHeight: 50 },
-  saveButton: { minHeight: 50 },
+  explicitCreateButton: { minHeight: 50, borderRadius: 15, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingHorizontal: 16 },
+  explicitCreateButtonText: { fontSize: 15, fontWeight: "900" },
+  explicitSaveButton: { minHeight: 52, borderRadius: 16, alignItems: "center", justifyContent: "center" },
+  explicitSaveButtonText: { fontSize: 16, fontWeight: "900" },
   formRow: { flexDirection: "row", gap: 8 },
   field: { flex: 1, gap: 6 },
   fieldLabel: { fontSize: 12, fontWeight: "800" },
