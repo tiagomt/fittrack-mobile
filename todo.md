@@ -22,3 +22,8 @@
 - [x] Corrigir o contraste do botão “Novo exercício” no tema claro
 - [x] Garantir que o botão “Adicionar exercício” permaneça visível no modal Android
 - [x] Validar o cadastro no tema claro e a regressão das demais telas
+
+- [x] Investigar por que o APK instalado não contém as mudanças do checkpoint atual
+- [x] Rastrear e corrigir a origem do bundle usado na compilação Android (versão Expo 1.0.1 e versionCode Android 2)
+- [x] Validar um bundle Android limpo e documentar a instalação correta (export Android concluído)
+- [ ] Confirmar no dispositivo físico que o APK gerado a partir do novo checkpoint mostra a versão 1.0.1
