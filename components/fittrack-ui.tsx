@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, View, type PressableProps, type TextStyle, type ViewStyle } from "react-native";
+import { Pressable, StyleSheet, Text, View, type PressableProps, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 
@@ -16,10 +16,10 @@ export function SectionHeader({ title, action, onAction }: { title: string; acti
   </View>;
 }
 
-export function PrimaryButton({ children, onPress, icon, variant = "primary", style, ...props }: PressableProps & { children: React.ReactNode; icon?: string; variant?: "primary" | "secondary" | "ghost" | "danger"; style?: ViewStyle }) {
+export function PrimaryButton({ children, onPress, icon, variant = "primary", textColor, style, ...props }: PressableProps & { children: React.ReactNode; icon?: string; variant?: "primary" | "secondary" | "ghost" | "danger"; textColor?: string; style?: StyleProp<ViewStyle> }) {
   const colors = useColors();
   const background = variant === "primary" ? colors.primary : variant === "danger" ? colors.error : variant === "secondary" ? colors.background : "transparent";
-  const foreground = variant === "primary" || variant === "danger" ? "#ffffff" : colors.primary;
+  const foreground = textColor ?? (variant === "primary" || variant === "danger" ? "#ffffff" : colors.primary);
   return <Pressable {...props} onPress={onPress} style={({ pressed }) => [styles.button, { backgroundColor: background, borderColor: variant === "secondary" ? colors.border : background, opacity: pressed ? 0.82 : 1 }, variant === "ghost" && styles.ghostButton, style]}>
     {icon ? <IconSymbol name={icon as any} size={18} color={foreground} /> : null}
     <Text style={[styles.buttonText, { color: foreground }]}>{children}</Text>

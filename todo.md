@@ -18,3 +18,7 @@
 
 - [x] Corrigir o fluxo de inclusão de um novo exercício no menu Exercícios sem alterar os demais fluxos
 - [x] Validar que o novo exercício é salvo e aparece na biblioteca após fechar e reabrir a tela (store persistente e teste de regressão aprovados)
+
+- [x] Corrigir o contraste do botão “Novo exercício” no tema claro
+- [x] Garantir que o botão “Adicionar exercício” permaneça visível no modal Android
+- [x] Validar o cadastro no tema claro e a regressão das demais telas
